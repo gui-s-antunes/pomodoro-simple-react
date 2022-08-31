@@ -19,10 +19,22 @@ export function PomodoroTimer(props: Props): JSX.Element {
   }, 1000);
 
   return (
-    <div>
+    <div className="pomodoro">
       <h2>Your are: working</h2>
       <Timer mainTime={mainTime} />
-      <Button text="Texto" onClick={() => console.log('hehe boi')}></Button>
+
+      <div className="controls">
+        <Button text="Texto" onClick={() => console.log('hehe boi')}></Button>
+        <Button text="Texto" onClick={() => console.log('hehe boi')}></Button>
+        <Button text="Texto" onClick={() => console.log('hehe boi')}></Button>
+      </div>
+
+      <div className="details">
+        <p>Testando: situações da app</p>
+        <p>Testando: situações da app</p>
+        <p>Testando: situações da app</p>
+        <p>Testando: situações da app</p>
+      </div>
     </div>
   );
 }
