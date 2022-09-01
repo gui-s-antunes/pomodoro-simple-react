@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useInterval } from '../hooks/use-interval';
-// import { secondsToMinutes } from '../utils/seconds-to-minutes';
 import { secondsToTime } from '../utils/seconds-to-time';
 import { Button } from './button';
 import { Timer } from './timer';
@@ -9,9 +8,12 @@ import { Timer } from './timer';
 const bellStart = require('../sounds/Camcom.mp3');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bellFinish = require('../sounds/Red-Luigi-Course-Clear Fanfare.mp3');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const bellFinishLong = require('../sounds/Sanic-Act_Cleared.flac');
 
 const audioStartWorking = new Audio(bellStart);
 const audioFinishWorking = new Audio(bellFinish);
+const audioFinishWorkingLong = new Audio(bellFinishLong);
 
 interface Props {
   PomodoroTimer: number;
@@ -82,19 +84,12 @@ export function PomodoroTimer(props: Props): JSX.Element {
 
     if (!long) {
       setMainTime(props.shortRestTime);
+      audioFinishWorking.play();
     } else {
       setMainTime(props.longRestTime);
+      audioFinishWorkingLong.play();
     }
-
-    audioFinishWorking.play();
   };
-
-  // const pauseWork = () => {
-  //   if (working) {
-  //     setTimeCounting(false);
-  //     setWorking(false);
-  //   }
-  // };
 
   return (
     <div className="pomodoro">
