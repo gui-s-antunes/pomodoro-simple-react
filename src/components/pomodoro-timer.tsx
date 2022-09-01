@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useInterval } from '../hooks/use-interval';
+import { secondsToTime } from '../utils/seconds-to-time';
 // import { secondsToTime } from '../utils/seconds-to-time';
 import { Button } from './button';
 import { Timer } from './timer';
@@ -24,15 +25,44 @@ export function PomodoroTimer(props: Props): JSX.Element {
   const [timeCounting, setTimeCounting] = React.useState(false);
   const [working, setWorking] = React.useState(false);
   const [resting, setResting] = React.useState(false);
+  const [cyclesQttManager, setCyclesQttManager] = React.useState(
+    new Array(props.cycles - 1).fill(true),
+  );
+
+  const [completedCycles, setCompletedCycles] = React.useState(0);
+  const [fullWorkingTime, setFullWorkingTime] = React.useState(0);
+  const [numberOfPomodoros, setNumberOfPomodoros] = React.useState(0);
 
   useEffect(() => {
     if (working) document.body.classList.add('working');
     if (resting) document.body.classList.remove('working');
-  });
+
+    if (mainTime > 0) return;
+
+    if (working && cyclesQttManager.length > 0) {
+      configureResting(false);
+      cyclesQttManager.pop();
+    } else if (working && cyclesQttManager.length <= 0) {
+      configureResting(true);
+      setCyclesQttManager(new Array(props.cycles - 1).fill(true));
+      setCompletedCycles(completedCycles + 1);
+    }
+
+    if (working) setNumberOfPomodoros(numberOfPomodoros + 1);
+    if (resting) configureWork();
+  }, [
+    working,
+    cyclesQttManager,
+    mainTime,
+    resting,
+    completedCycles,
+    numberOfPomodoros,
+  ]);
 
   useInterval(
     () => {
       setMainTime(mainTime - 1);
+      if (working) setFullWorkingTime(fullWorkingTime + 1);
     },
     timeCounting ? 1000 : null,
   );
@@ -68,7 +98,7 @@ export function PomodoroTimer(props: Props): JSX.Element {
 
   return (
     <div className="pomodoro">
-      <h2>Your are: working</h2>
+      <h2>Você está {working ? 'trabalhando!' : 'descansando'}</h2>
       <Timer mainTime={mainTime} />
 
       <div className="controls">
@@ -82,10 +112,9 @@ export function PomodoroTimer(props: Props): JSX.Element {
       </div>
 
       <div className="details">
-        <p>Testando: situações da app</p>
-        <p>Testando: situações da app</p>
-        <p>Testando: situações da app</p>
-        <p>Testando: situações da app</p>
+        <p>Ciclos concluídos: {completedCycles}</p>
+        <p>Horas trabalhadas: {secondsToTime(fullWorkingTime)}</p>
+        <p>Pomodoros concluídos: {numberOfPomodoros}</p>
       </div>
     </div>
   );
