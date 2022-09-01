@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useInterval } from '../hooks/use-interval';
 // import { secondsToTime } from '../utils/seconds-to-time';
 import { Button } from './button';
@@ -13,10 +13,46 @@ interface Props {
 
 export function PomodoroTimer(props: Props): JSX.Element {
   const [mainTime, setMainTime] = React.useState(props.PomodoroTimer);
+  const [timeCounting, setTimeCounting] = React.useState(false);
+  const [working, setWorking] = React.useState(false);
+  const [resting, setResting] = React.useState(false);
 
-  useInterval(() => {
-    setMainTime(mainTime - 1);
-  }, 1000);
+  useEffect(() => {
+    if (working) document.body.classList.add('working');
+  });
+
+  useInterval(
+    () => {
+      setMainTime(mainTime - 1);
+    },
+    timeCounting ? 1000 : null,
+  );
+
+  const configureWork = () => {
+    setTimeCounting(true);
+    setWorking(true);
+    setResting(false);
+    setMainTime(props.PomodoroTimer);
+  };
+
+  const configureResting = (long: boolean) => {
+    setTimeCounting(true);
+    setWorking(false);
+    setResting(true);
+
+    if (!long) {
+      setMainTime(props.shortRestTime);
+    } else {
+      setMainTime(props.longRestTime);
+    }
+  };
+
+  // const pauseWork = () => {
+  //   if (working) {
+  //     setTimeCounting(false);
+  //     setWorking(false);
+  //   }
+  // };
 
   return (
     <div className="pomodoro">
@@ -24,9 +60,13 @@ export function PomodoroTimer(props: Props): JSX.Element {
       <Timer mainTime={mainTime} />
 
       <div className="controls">
-        <Button text="Texto" onClick={() => console.log('hehe boi')}></Button>
-        <Button text="Texto" onClick={() => console.log('hehe boi')}></Button>
-        <Button text="Texto" onClick={() => console.log('hehe boi')}></Button>
+        <Button text="Work" onClick={() => configureWork()}></Button>
+        <Button text="Rest" onClick={() => configureResting(false)}></Button>
+        <Button
+          className={resting && !working ? 'hidden' : ''}
+          text={timeCounting ? 'Pause' : 'Resume'}
+          onClick={() => setTimeCounting(!timeCounting)}
+        ></Button>
       </div>
 
       <div className="details">
