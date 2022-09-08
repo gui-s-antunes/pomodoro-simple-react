@@ -17,22 +17,11 @@ const bellFinish = require('../sounds/Red-Luigi-Course-Clear.mp3');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bellFinishLong = require('../sounds/Sanic-Act_Cleared.flac');
 
-// const audioStartWorking = new Audio(bellStart);
-// const audioFinishWorking = new Audio(bellFinish);
-// const audioFinishWorkingLong = new Audio(bellFinishLong);
-
 const audioOptions: AudioProtocol[] = [
   { value: 'Camcom.mp3', label: 'Capcom Theme' },
   { value: 'Red-Luigi-Course-Clear.mp3', label: 'Red Luigi Course Clear' },
   { value: 'Sanic-Act_Cleared.flac', label: 'Sanic Act Cleared' },
-  // { value: '', label: 'Custom Audio' },
 ];
-
-// const options = [
-//   { value: 'chocolate', label: 'Chocolate' },
-//   { value: 'strawberry', label: 'Strawberry' },
-//   { value: 'vanilla', label: 'Vanilla' },
-// ];
 
 interface Props {
   PomodoroTimer: number;
@@ -98,11 +87,6 @@ export function PomodoroTimer(props: Props): JSX.Element {
     numberOfPomodoros,
   ]);
 
-  // useEffect(() => {
-  //   if (selectedAudioStart)
-  //     setAudioStart(setAudio(selectedAudioStart?.value, '../sounds/'));
-  // }, [selectedAudioStart, selectedAudioFinish, selectedAudioFinishLong]);
-
   useInterval(
     () => {
       setMainTime(mainTime - 1);
@@ -116,7 +100,6 @@ export function PomodoroTimer(props: Props): JSX.Element {
     setWorking(true);
     setResting(false);
     setMainTime(props.PomodoroTimer);
-    // audioStartWorking.play();
     audioStart.play();
   };
 
@@ -127,36 +110,31 @@ export function PomodoroTimer(props: Props): JSX.Element {
 
     if (!long) {
       setMainTime(props.shortRestTime);
-      // audioFinishWorking.play();
       audioFinishShort.play();
     } else {
       setMainTime(props.longRestTime);
-      // audioFinishWorkingLong.play();
       audioFinishLong.play();
     }
   };
 
   const configureStartBell = (option: SingleValue<AudioProtocol>) => {
-    // console.log(option);
     setSelectedAudioStart(option);
     if (option) setAudioStart(setAudio(option.value));
   };
 
   const configureFinishBell = (option: SingleValue<AudioProtocol>) => {
-    // console.log(option);
     setSelectedAudioFinish(option);
     if (option) setAudioFinishShort(setAudio(option.value));
   };
 
   const configureFinishBellLong = (option: SingleValue<AudioProtocol>) => {
-    // console.log(option);
     setSelectedAudioFinishLong(option);
     if (option) setAudioFinishLong(setAudio(option.value));
   };
 
   return (
     <div className="pomodoro">
-      <h2>You are {working ? 'work!' : 'resting!'}</h2>
+      <h2>You are {working ? 'working!' : 'resting!'}</h2>
       <Timer mainTime={mainTime} />
 
       <div className="controls">
@@ -181,8 +159,6 @@ export function PomodoroTimer(props: Props): JSX.Element {
           value={selectedAudioStart}
           onChange={(option) => configureStartBell(option)}
           options={audioOptions}
-
-          // onChange={(option) => configureStartBell(option)}
         />
         <p>Set a bell to Pomodoro Finish:</p>
         <Select

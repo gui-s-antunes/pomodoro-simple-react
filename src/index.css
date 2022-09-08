@@ -67,3 +67,17 @@ body {
 .pomodoro .details {
   margin: 20px 0;
 }
+
+.pomodoro .details, .pomodoro .configs {
+  background-color: #efefef;
+  padding: 10px;
+  border-radius: 7px;
+}
+
+.pomodoro .configs p:first-child{
+  margin-top: 0;
+}
+
+.pomodoro .configs p {
+  margin-top: 15px;
+}
