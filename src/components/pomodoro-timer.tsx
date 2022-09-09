@@ -26,6 +26,7 @@ const audioOptions: AudioProtocol[] = [
 
 export function PomodoroTimer(props: PomodoroTimerProps): JSX.Element {
   const [mainTime, setMainTime] = useState(props.PomodoroTimer);
+  const [timeStamp, setTimeStamp] = useState(Math.round(Date.now() / 1000));
   const [timeCounting, setTimeCounting] = useState(false);
   const [working, setWorking] = useState(false);
   const [resting, setResting] = useState(true);
@@ -81,10 +82,19 @@ export function PomodoroTimer(props: PomodoroTimerProps): JSX.Element {
     numberOfPomodoros,
   ]);
 
+  useEffect(() => {
+    setTimeStamp(Math.round(Date.now() / 1000));
+  }, [timeCounting]);
+
   useInterval(
     () => {
-      setMainTime(mainTime - 1);
-      if (working) setFullWorkingTime(fullWorkingTime + 1);
+      // att const com o timestamp a cada vez que passar aqui
+      // e depois fazer a diferença entre o timestamp anterior e substituir pelo 1 nos dois abaixo
+      // isso evita o delay que causa na página e faz o useInterval se atrasar (muito)
+      const timeDiff = Math.round(Date.now() / 1000) - timeStamp;
+      setTimeStamp(Math.round(Date.now() / 1000));
+      setMainTime(mainTime - timeDiff);
+      if (working) setFullWorkingTime(fullWorkingTime + timeDiff);
     },
     timeCounting ? 1000 : null,
   );
