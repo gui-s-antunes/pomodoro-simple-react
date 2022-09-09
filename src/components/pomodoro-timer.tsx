@@ -9,6 +9,7 @@ import { Timer } from './timer';
 import setAudio from '../utils/set-audio';
 
 import { AudioProtocol } from '../interfaces/audio-protocol';
+import { PomodoroTimerProps } from '../interfaces/pomodoro-timer-props';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bellStart = require('../sounds/Camcom.mp3');
@@ -23,18 +24,11 @@ const audioOptions: AudioProtocol[] = [
   { value: 'Sanic-Act_Cleared.flac', label: 'Sanic Act Cleared' },
 ];
 
-interface Props {
-  PomodoroTimer: number;
-  shortRestTime: number;
-  longRestTime: number;
-  cycles: number;
-}
-
-export function PomodoroTimer(props: Props): JSX.Element {
+export function PomodoroTimer(props: PomodoroTimerProps): JSX.Element {
   const [mainTime, setMainTime] = useState(props.PomodoroTimer);
   const [timeCounting, setTimeCounting] = useState(false);
   const [working, setWorking] = useState(false);
-  const [resting, setResting] = useState(false);
+  const [resting, setResting] = useState(true);
   const [cyclesQttManager, setCyclesQttManager] = useState(
     new Array(props.cycles - 1).fill(true),
   );
@@ -43,15 +37,15 @@ export function PomodoroTimer(props: Props): JSX.Element {
   const [fullWorkingTime, setFullWorkingTime] = useState(0);
   const [numberOfPomodoros, setNumberOfPomodoros] = useState(0);
 
-  const [selectedAudioStart, setSelectedAudioStart] = useState<
-    SingleValue<AudioProtocol>
-  >(audioOptions[0]);
-  const [selectedAudioFinish, setSelectedAudioFinish] = useState<
-    SingleValue<AudioProtocol>
-  >(audioOptions[0]);
-  const [selectedAudioFinishLong, setSelectedAudioFinishLong] = useState<
-    SingleValue<AudioProtocol>
-  >(audioOptions[0]);
+  // const [selectedAudioStart, setSelectedAudioStart] = useState<
+  //   SingleValue<AudioProtocol>
+  // >(audioOptions[0]);
+  // const [selectedAudioFinish, setSelectedAudioFinish] = useState<
+  //   SingleValue<AudioProtocol>
+  // >(audioOptions[0]);
+  // const [selectedAudioFinishLong, setSelectedAudioFinishLong] = useState<
+  //   SingleValue<AudioProtocol>
+  // >(audioOptions[0]);
 
   const [audioFinishShort, setAudioFinishShort] = useState(
     new Audio(bellFinish),
@@ -118,17 +112,17 @@ export function PomodoroTimer(props: Props): JSX.Element {
   };
 
   const configureStartBell = (option: SingleValue<AudioProtocol>) => {
-    setSelectedAudioStart(option);
+    // setSelectedAudioStart(option);
     if (option) setAudioStart(setAudio(option.value));
   };
 
   const configureFinishBell = (option: SingleValue<AudioProtocol>) => {
-    setSelectedAudioFinish(option);
+    // setSelectedAudioFinish(option);
     if (option) setAudioFinishShort(setAudio(option.value));
   };
 
   const configureFinishBellLong = (option: SingleValue<AudioProtocol>) => {
-    setSelectedAudioFinishLong(option);
+    // setSelectedAudioFinishLong(option);
     if (option) setAudioFinishLong(setAudio(option.value));
   };
 
@@ -156,19 +150,22 @@ export function PomodoroTimer(props: Props): JSX.Element {
       <div className="configs">
         <p>Set a bell to Pomodoro Start:</p>
         <Select
-          value={selectedAudioStart}
+          placeholder="Select a bell..."
+          // value={selectedAudioStart}
           onChange={(option) => configureStartBell(option)}
           options={audioOptions}
         />
         <p>Set a bell to Pomodoro Finish:</p>
         <Select
-          value={selectedAudioFinish}
+          placeholder="Select a bell..."
+          // value={selectedAudioFinish}
           options={audioOptions}
           onChange={(option) => configureFinishBell(option)}
         />
         <p>Set a bell to Cycle Finish:</p>
         <Select
-          value={selectedAudioFinishLong}
+          placeholder="Select a bell..."
+          // value={selectedAudioFinishLong}
           options={audioOptions}
           onChange={(option) => configureFinishBellLong(option)}
         />
